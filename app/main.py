@@ -1,11 +1,22 @@
+from flask import Flask, jsonify
 import pandas as pd
 from validator import validate
 
-df = pd.read_csv("data/sample.csv")
+app = Flask(__name__)
 
-report = validate(df)
+@app.get("/")
+def health():
+    return "Data Quality API is running"
 
-print("=== DATA QUALITY REPORT ===\n")
+@app.get("/report")
+def report():
 
-for key, value in report.items():
-    print(f"{key}: {value}")
+    df = pd.read_csv("data/sample.csv")
+
+    result = validate(df)
+
+    return jsonify(result)
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080)

@@ -6,7 +6,7 @@ EMAIL_PATTERN = r"^[\w\.-]+@[\w\.-]+\.\w+$"
 def validate(df):
     return {
         "missing": df.isnull().sum().to_dict(),
-        "duplicates": int(df.duplicated().sum()),
+        "duplicate_ids": int(df["id"].duplicated().sum()),
         "invalid_emails": int(
             (~df["email"].fillna("").str.match(EMAIL_PATTERN)).sum()
         ),
