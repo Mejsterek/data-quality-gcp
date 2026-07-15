@@ -6,6 +6,7 @@ A production-like Data Quality microservice deployed on Google Cloud Run with CI
 ## Features
 
 * Validate CSV datasets
+* Validate a BigQuery table
 * Detect missing values
 * Detect duplicate IDs
 * Validate email format
@@ -18,6 +19,7 @@ A production-like Data Quality microservice deployed on Google Cloud Run with CI
 * Flask
 * Pandas
 * Pytest
+* Google Cloud BigQuery
 * Docker
 * Google Cloud Run
 * Artifact Registry
@@ -32,7 +34,7 @@ User
 Flask API (Cloud Run)
   |
   v
-Pandas validation engine
+Pandas validation engine / BigQuery validation query
   |
   v
 JSON response
@@ -45,6 +47,7 @@ data-quality-gcp/
 +-- app/
 |   +-- main.py
 |   +-- validator.py
+|   +-- bigquery_validator.py
 +-- data/
 |   +-- sample.csv
 +-- tests/
@@ -94,6 +97,19 @@ Validation endpoint:
 http://localhost:8080/validate
 ```
 
+BigQuery validation endpoint:
+
+```text
+http://localhost:8080/validate-bigquery
+```
+
+For local BigQuery access, authenticate with Application Default Credentials:
+
+```powershell
+gcloud auth application-default login --project=data-quality-gcp
+gcloud auth application-default set-quota-project data-quality-gcp
+```
+
 ## Running with Docker
 
 Build the image:
@@ -128,6 +144,20 @@ Data Quality API is running
 POST /validate
 ```
 
+### Validate BigQuery Table
+
+```http
+GET /validate-bigquery
+```
+
+Validates the BigQuery table:
+
+```text
+data-quality-gcp.data_quality.customers
+```
+
+The endpoint checks for missing names, duplicate IDs, invalid ages, and invalid email addresses.
+
 ## How to Use API
 
 Send a CSV file to the validation endpoint:
@@ -150,6 +180,23 @@ Example response:
   "duplicate_ids": 1,
   "invalid_emails": 1,
   "invalid_ages": 2
+}
+```
+
+BigQuery validation:
+
+```bash
+curl http://localhost:8080/validate-bigquery
+```
+
+Example response:
+
+```json
+{
+  "missing_names": 1,
+  "duplicate_ids": 1,
+  "invalid_ages": 2,
+  "invalid_emails": 1
 }
 ```
 

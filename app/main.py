@@ -1,12 +1,16 @@
 from flask import Flask, jsonify, request
 import pandas as pd
 from validator import validate
-
+from bigquery_validator import validate_bigquery_table
 app = Flask(__name__)
 
 @app.get("/")
 def health():
     return "Data Quality API is running"
+
+@app.get("/validate-bigquery")
+def validate_bigquery():
+    return jsonify(validate_bigquery_table())
 
 @app.post("/validate")
 def validate_csv():

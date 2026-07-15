@@ -1,3 +1,4 @@
 pandas
 pytest
 flask
+google-cloud-bigquery
