@@ -50,6 +50,12 @@ data-quality-gcp/
 |   +-- bigquery_validator.py
 +-- data/
 |   +-- sample.csv
++-- terraform/
++   +-- main.tf
++   +-- variables.tf
++   +-- outputs.tf
++   +-- versions.tf
++   +-- terraform.tfvars.example
 +-- tests/
 |   +-- test_validator.py
 +-- Dockerfile
@@ -199,6 +205,43 @@ Example response:
   "invalid_emails": 1
 }
 ```
+
+## Terraform Data Quality
+
+This project can also manage BigQuery data quality checks with Terraform and Google Dataplex DataScan.
+The Terraform configuration in `terraform/` creates:
+
+* required GCP APIs for BigQuery and Dataplex
+* a Dataplex data quality scan for `data_quality.customers`
+
+The scan checks:
+
+* table is not empty
+* `name` is not null
+* `id` is unique
+* `age` is between 0 and 120
+* `email` matches the expected email pattern
+
+Run Terraform:
+
+```bash
+cd terraform
+cp terraform.tfvars.example terraform.tfvars
+terraform init
+terraform plan
+terraform apply
+```
+
+Run the on-demand scan after Terraform creates it:
+
+```bash
+gcloud dataplex datascans run customers-quality \
+  --location=europe-central2 \
+  --project=data-quality-gcp
+```
+
+To validate another table, edit `target_dataset_id` and `target_table_id` in `terraform/terraform.tfvars`
+and adjust the rules in `terraform/main.tf`.
 
 ## Deployment
 

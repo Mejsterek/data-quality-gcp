@@ -37,6 +37,19 @@ htmlcov/
 *.json
 !package*.json
 
+# Terraform local files
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
 # Google Cloud local credentials
 application_default_credentials.json
 service-account*.json
