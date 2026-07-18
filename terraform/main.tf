@@ -33,6 +33,7 @@ resource "google_dataplex_datascan" "customers_quality" {
 
   data_quality_spec {
     sampling_percent            = var.sampling_percent
+    catalog_publishing_enabled = true
 
     rules {
       name      = "table-not-empty"
